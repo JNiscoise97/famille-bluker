@@ -1,0 +1,1111 @@
+<title>Trois branches, un ancêtre</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Piazzolla:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --ink: #1E2A22;
+    --ink-soft: #4B5A50;
+    --paper: #E7E6DC;
+    --paper-raised: #F1F0E7;
+    --paper-deep: #DAD8C9;
+    --accent: #A63A2C;
+    --accent-soft: #E7CFC6;
+    --teal: #1F6B62;
+    --teal-soft: #D6E6E2;
+    --corine: #A8791C;
+    --marie: #7A4F84;
+    --chloe: #2A6E96;
+    --line: rgba(30, 42, 34, 0.14);
+    --shadow: rgba(30, 42, 34, 0.10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #E9E7DA;
+      --ink-soft: #B7BDB1;
+      --paper: #161F1A;
+      --paper-raised: #1D2822;
+      --paper-deep: #101712;
+      --accent: #D97456;
+      --accent-soft: #3B241D;
+      --teal: #5CB3A5;
+      --teal-soft: #1B3330;
+      --corine: #D9AE52;
+      --marie: #C79BD1;
+      --chloe: #6FB3DC;
+      --line: rgba(233, 231, 218, 0.14);
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ink: #E9E7DA;
+    --ink-soft: #B7BDB1;
+    --paper: #161F1A;
+    --paper-raised: #1D2822;
+    --paper-deep: #101712;
+    --accent: #D97456;
+    --accent-soft: #3B241D;
+    --teal: #5CB3A5;
+    --teal-soft: #1B3330;
+    --corine: #D9AE52;
+    --marie: #C79BD1;
+    --chloe: #6FB3DC;
+    --line: rgba(233, 231, 218, 0.14);
+    --shadow: rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Karla', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .display {
+    font-family: 'Piazzolla', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 44px 22px 90px;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .eyebrow {
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .masthead h1 {
+    font-size: clamp(32px, 6vw, 46px);
+    line-height: 1.1;
+    margin-top: 10px;
+  }
+
+  .masthead .subtitle {
+    margin-top: 14px;
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+
+  .masthead .names {
+    margin-top: 6px;
+    font-family: 'Piazzolla', serif;
+    font-style: italic;
+    font-size: 19px;
+    color: var(--ink);
+  }
+
+  /* ---------- Sections ---------- */
+
+  section { margin-top: 56px; }
+
+  .section-head { margin-bottom: 22px; }
+  .section-head h2 { font-size: 26px; margin-top: 6px; }
+  .section-head p { color: var(--ink-soft); margin: 8px 0 0; max-width: 60ch; }
+
+  /* ---------- Tree diagram ---------- */
+
+  .tree {
+    background: var(--paper-raised);
+    border-radius: 18px;
+    padding: 24px 18px;
+    box-shadow: 0 1px 0 var(--line) inset;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* The "trois frères" diagram: a single vertical stack, one card per
+     branch — deliberately not a horizontal fan with SVG connectors, which
+     breaks the instant a row of nodes doesn't fit a phone's width and
+     wraps (confirmed on a real device: the connector lines are drawn for
+     positions the nodes no longer occupy once wrapped). A vertical stack
+     has nothing to wrap: it reads the same at any width. */
+  .tree-root-card {
+    background: var(--teal-soft);
+    border: 1px solid var(--teal);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .tree-root-card .name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 16px; }
+  .tree-root-card .years { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
+
+  .tree-branch {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .branch-parent { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 14.5px; }
+  .branch-parent .byears { font-family: 'Karla', sans-serif; font-weight: 400; font-size: 12px; color: var(--ink-soft); margin-left: 6px; }
+  .branch-link { font-size: 11.5px; color: var(--ink-soft); margin: 6px 0; }
+  .branch-target { display: inline-flex; align-items: center; gap: 6px; }
+  .branch-target-name { font-weight: 700; font-size: 14.5px; }
+  .branch-target-name.corine { color: var(--corine); }
+  .branch-target-name.marie { color: var(--marie); }
+  .branch-target-name.chloe { color: var(--chloe); }
+
+  /* Tree structure reused by the two ascendant pedigree diagrams below
+     (max 2 nodes per row — narrow enough to never wrap, unlike the
+     3-wide diagram above). */
+  .tree-tier { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; position: relative; }
+  .tree-tier + .tree-tier { margin-top: 6px; }
+
+  .tree-node {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-align: center;
+    min-width: 128px;
+  }
+  .tree-node .name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 14.5px; }
+  .tree-node .years { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  .tree-connector {
+    display: block;
+    width: 100%;
+    height: 30px;
+    color: var(--ink-soft);
+  }
+
+  .ancestor-trees {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 24px 0 30px;
+  }
+  @media (max-width: 640px) { .ancestor-trees { grid-template-columns: 1fr; } }
+  .ancestor-trees h3 { font-size: 14px; color: var(--teal); margin-bottom: 10px; }
+
+  .tree.small { padding: 20px 10px 16px; }
+  .tree.small .tree-tier { gap: 8px; }
+  .tree.small .tree-node { min-width: 76px; padding: 7px 6px; }
+  .tree.small .tree-node .name { font-size: 11.5px; }
+  .tree.small .tree-node .years { font-size: 9.5px; }
+
+  /* ---------- Emancipation block ---------- */
+
+  .story p { margin: 0 0 14px; }
+  .story p:last-child { margin-bottom: 0; }
+
+  .pull {
+    font-family: 'Piazzolla', serif;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 18px;
+    margin: 22px 0;
+  }
+
+  .timeline {
+    margin-top: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-left: 2px solid var(--line);
+    padding-left: 22px;
+  }
+  .timeline-item { position: relative; padding: 10px 0; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -27px;
+    top: 17px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink-soft);
+  }
+  .timeline-item.pivot::before { background: var(--accent); width: 11px; height: 11px; left: -28.5px; top: 15.5px; }
+  .timeline-item .t-year { font-variant-numeric: tabular-nums; font-weight: 700; font-family: 'Piazzolla', serif; }
+  .timeline-item.pivot .t-year { color: var(--accent); }
+  .timeline-item .t-text { color: var(--ink-soft); font-size: 14.5px; }
+
+  /* ---------- Three branches ---------- */
+
+  .branches {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px) {
+    .branches { grid-template-columns: 1fr; }
+  }
+
+  .branch-card {
+    background: var(--paper-raised);
+    border-radius: 16px;
+    padding: 20px 18px;
+    border-top: 3px solid var(--teal);
+  }
+  .branch-card h3 { font-size: 19px; }
+  .branch-card .via { font-size: 12.5px; color: var(--ink-soft); margin: 4px 0 16px; }
+  .branch-card .via b { color: var(--ink); font-weight: 600; }
+
+  .chain { display: flex; flex-direction: column; gap: 9px; }
+  .chain-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13.5px;
+    padding-bottom: 9px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .chain-item:last-child { border-bottom: none; padding-bottom: 0; font-weight: 700; color: var(--accent); }
+  .chain-item .who { color: var(--ink); }
+  .chain-item .when { color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  /* ---------- Descendance ---------- */
+
+  .desc-stats {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .desc-stat {
+    background: var(--paper-raised);
+    border-radius: 14px;
+    padding: 14px 20px;
+    flex: 1;
+    min-width: 140px;
+  }
+  .desc-stat .n { font-family: 'Piazzolla', serif; font-weight: 700; font-size: 28px; font-variant-numeric: tabular-nums; }
+  .desc-stat .n.accent { color: var(--accent); }
+  .desc-stat .l { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+
+  .desc-wrap {
+    background: var(--paper-raised);
+    border-radius: 16px;
+    padding: 20px 20px 20px 16px;
+  }
+
+  ul.desc-list {
+    list-style: none;
+    margin: 0;
+    padding-left: 18px;
+  }
+  ul.desc-root { padding-left: 0; }
+  ul.desc-list li {
+    padding: 5px 0;
+    border-left: 1px solid var(--line);
+    padding-left: 14px;
+    margin-left: 1px;
+  }
+  ul.desc-root > li { border-left: none; padding-left: 0; margin-left: 0; }
+
+  .desc-list summary {
+    cursor: pointer;
+    font-size: 14px;
+    list-style: none;
+  }
+  .desc-list summary::-webkit-details-marker { display: none; }
+  .desc-list summary::before {
+    content: '▸';
+    display: inline-block;
+    width: 14px;
+    color: var(--teal);
+  }
+  details[open] > summary::before { content: '▾'; }
+
+  .desc-list .who { font-weight: 600; }
+  .desc-list .who.died-child { font-weight: 400; color: var(--ink-soft); }
+  .desc-list .when { color: var(--ink-soft); font-size: 12.5px; font-variant-numeric: tabular-nums; margin-left: 4px; }
+  .desc-list .count { color: var(--ink-soft); font-size: 11.5px; margin-left: 4px; }
+  .desc-list .child-tag {
+    color: var(--accent);
+    font-size: 11px;
+    font-style: italic;
+    margin-left: 6px;
+  }
+  .desc-list li:not(:has(> details)) {
+    font-size: 13.5px;
+    padding: 4px 0 4px 14px;
+  }
+
+  .who.branch-corine { color: var(--corine); }
+  .who.branch-marie { color: var(--marie); }
+  .who.branch-chloe { color: var(--chloe); }
+
+  .desc-legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .desc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; vertical-align: middle; }
+  .dot.corine { background: var(--corine); }
+  .dot.marie { background: var(--marie); }
+  .dot.chloe { background: var(--chloe); }
+
+  .desc-step-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal);
+    margin: 28px 0 10px;
+  }
+  .desc-step-title:first-of-type { margin-top: 0; }
+
+  /* ---------- Anecdotes ---------- */
+
+  .anecdotes { display: flex; flex-direction: column; gap: 14px; }
+  .anecdote {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--paper-raised);
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .anecdote .num {
+    font-family: 'Piazzolla', serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--teal);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 30px;
+  }
+  .anecdote p { margin: 0; font-size: 14.5px; }
+  .anecdote .who { font-weight: 700; }
+
+  /* ---------- Kinship note ---------- */
+
+  .kinship {
+    background: var(--teal-soft);
+    border-radius: 14px;
+    padding: 20px 22px;
+    font-size: 15px;
+  }
+  .kinship b { color: var(--teal); }
+
+  /* ---------- Footer ---------- */
+
+  footer {
+    margin-top: 64px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+  footer .sig { font-family: 'Piazzolla', serif; font-style: italic; color: var(--ink); font-size: 15px; margin-bottom: 6px; }
+</style>
+
+<div class="page">
+
+  <div class="masthead">
+    <div class="eyebrow">Rapport de généalogie</div>
+    <h1>Trois branches, un ancêtre</h1>
+    <p class="subtitle">Préparé pour le déjeuner du 9 septembre 2026</p>
+  </div>
+
+  <section>
+    <div class="section-head">
+      <div class="eyebrow">Le tronc commun</div>
+      <h2>Trois frères, trois lignées</h2>
+      <p>Corine, Marie et Chloé descendent toutes les trois du même couple : Philibert BLUKER et Vitaline INDIANA, à Saint-Leu. Chacune par un fils différent — trois frères.</p>
+    </div>
+
+    <div class="tree">
+      <div class="tree-root-card">
+        <div class="name">Philibert BLUKER &amp; Vitaline INDIANA</div>
+        <div class="years">Saint-Leu, Piton — mariés en 1877</div>
+      </div>
+
+      <div class="tree-branch">
+        <div class="branch-parent">Antoine BLUKER <span class="byears">1888–1986</span></div>
+        <div class="branch-link">↓ 3 générations plus tard</div>
+        <div class="branch-target"><span class="dot corine"></span><span class="branch-target-name corine">Corine</span></div>
+      </div>
+
+      <div class="tree-branch">
+        <div class="branch-parent">Arsène BLUKER <span class="byears">1883–1938</span></div>
+        <div class="branch-link">↓ 4 générations plus tard</div>
+        <div class="branch-target"><span class="dot marie"></span><span class="branch-target-name marie">Marie</span></div>
+      </div>
+
+      <div class="tree-branch">
+        <div class="branch-parent">François BLUKER <span class="byears">1887–1974</span></div>
+        <div class="branch-link">↓ 4 générations plus tard</div>
+        <div class="branch-target"><span class="dot chloe"></span><span class="branch-target-name chloe">Chloé</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="section-head">
+      <div class="eyebrow">L'histoire de Philibert et Vitaline</div>
+      <h2>Nés en esclavage, libres avant leurs vingt ans</h2>
+    </div>
+    <p>Philibert BLUKER naît en 1840 à Saint-Leu, sur les hauteurs du Piton. Ses parents, Dieudonné BLUKER (1812–1904) et Monique CRESPIN (1816–1880), ont tous les deux connu l'esclavage — comme leurs propres mères, Louise Euphrosine (née vers 1776) et Catherine (née vers 1796). Sa future épouse, Vitaline INDIANA, née en 1855, en descend elle aussi : ses parents Anselme INDIANA et Victoire BRIX, et leurs propres mères, l'aïeule Vitaline INDIANA (née vers 1813) et Laurince (née vers 1804), ont eux aussi été réduits en esclavage. Huit personnes, dans les deux familles qui se rejoindront par ce mariage, ont vécu cette histoire.</p>
+    <div class="ancestor-trees">
+      <div>
+        <h3>Ascendance de Philibert</h3>
+        <div class="tree small">
+          <div class="tree-tier">
+            <div class="tree-node"><div class="name">Louise Euphrosine</div><div class="years">≈1776–av.1851</div></div>
+            <div class="tree-node"><div class="name">Catherine</div><div class="years">≈1796–1848</div></div>
+          </div>
+          <svg class="tree-connector" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M75,0 L75,30 M225,0 L225,30" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+          <div class="tree-tier">
+            <div class="tree-node"><div class="name">Dieudonné BLUKER</div><div class="years">1812–1904</div></div>
+            <div class="tree-node"><div class="name">Monique CRESPIN</div><div class="years">1816–1880</div></div>
+          </div>
+          <svg class="tree-connector" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M75,0 L75,15 M225,0 L225,15 M75,15 L225,15 M150,15 L150,30" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+          <div class="tree-tier">
+            <div class="tree-node"><div class="name">Philibert BLUKER</div><div class="years">1840–1912</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3>Ascendance de Vitaline</h3>
+        <div class="tree small">
+          <div class="tree-tier">
+            <div class="tree-node"><div class="name">Vitaline INDIANA</div><div class="years">≈1813–1853</div></div>
+            <div class="tree-node"><div class="name">Laurince</div><div class="years">≈1804–1844</div></div>
+          </div>
+          <svg class="tree-connector" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M75,0 L75,30 M225,0 L225,30" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+          <div class="tree-tier">
+            <div class="tree-node"><div class="name">Anselme INDIANA</div><div class="years">1830–1878</div></div>
+            <div class="tree-node"><div class="name">Victoire BRIX</div><div class="years">1830–1865</div></div>
+          </div>
+          <svg class="tree-connector" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M75,0 L75,15 M225,0 L225,15 M75,15 L225,15 M150,15 L150,30" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+          <div class="tree-tier">
+            <div class="tree-node"><div class="name">Vitaline INDIANA</div><div class="years">1855–1894</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="pull">Laurince, l'arrière-grand-mère maternelle de Vitaline, meurt en 1844 — quatre ans avant l'abolition. Elle n'aura jamais connu la liberté.</p>
+    <p>Le recensement annuel des personnes réduites en esclavage à Saint-Leu permet de suivre plusieurs d'entre eux d'une année sur l'autre, chez leurs propriétaires successifs — jusqu'au tout jeune Philibert lui-même, recensé comme esclave à un, trois puis six ans.</p>
+
+    <div class="timeline" style="margin-top: 28px;">
+      <div class="timeline-item"><span class="t-year">≈1776</span> <span class="t-text">— Louise Euphrosine naît, grand-mère paternelle de Philibert (esclave)</span></div>
+      <div class="timeline-item"><span class="t-year">≈1796</span> <span class="t-text">— Catherine naît, grand-mère maternelle de Philibert (esclave)</span></div>
+      <div class="timeline-item"><span class="t-year">≈1804</span> <span class="t-text">— Laurince naît, arrière-grand-mère maternelle de Vitaline (esclave)</span></div>
+      <div class="timeline-item"><span class="t-year">1812</span> <span class="t-text">— Dieudonné BLUKER naît, grand-père de Philibert (esclave)</span></div>
+      <div class="timeline-item"><span class="t-year">≈1813</span> <span class="t-text">— Vitaline INDIANA l'aïeule naît, grand-mère paternelle de Vitaline (esclave)</span></div>
+      <div class="timeline-item"><span class="t-year">1816</span> <span class="t-text">— Monique CRESPIN naît, grand-mère de Philibert (esclave)</span></div>
+      <div class="timeline-item"><span class="t-year">1840</span> <span class="t-text">— Philibert BLUKER naît à Saint-Leu, Piton (esclave, recensé enfant)</span></div>
+      <div class="timeline-item"><span class="t-year">1844</span> <span class="t-text">— Mort de Laurince, encore en esclavage</span></div>
+      <div class="timeline-item pivot"><span class="t-year">1848</span> <span class="t-text">— Décret d'abolition de l'esclavage à La Réunion (27 avril) — Philibert, ses parents, sa grand-mère Monique, ainsi qu'Anselme et Victoire, parents de Vitaline, sont affranchis</span></div>
+      <div class="timeline-item"><span class="t-year">1855</span> <span class="t-text">— Vitaline INDIANA naît, libre, à Saint-Leu, Piton</span></div>
+      <div class="timeline-item"><span class="t-year">1877</span> <span class="t-text">— Philibert épouse Vitaline INDIANA</span></div>
+      <div class="timeline-item"><span class="t-year">1894</span> <span class="t-text">— Mort de Vitaline, à 39 ans, à Saint-Leu, Piton</span></div>
+      <div class="timeline-item"><span class="t-year">1912</span> <span class="t-text">— Mort de Philibert, à Saint-Leu, Piton</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div class="eyebrow">Les trois lignées</div>
+      <h2>De Philibert à chacune d'elles</h2>
+      <p>Le chemin exact, génération par génération.</p>
+    </div>
+
+    <div class="branches">
+      <div class="branch-card">
+        <h3><span class="dot corine" style="margin-right:7px;"></span>→ Corine</h3>
+        <p class="via">par <b>Antoine</b></p>
+        <div class="chain">
+          <div class="chain-item"><span class="who">Philibert BLUKER</span><span class="when">1840–1912</span></div>
+          <div class="chain-item"><span class="who">Antoine BLUKER</span><span class="when">1888–1986</span></div>
+          <div class="chain-item"><span class="who">Michel BLUKER</span><span class="when">1915–1995</span></div>
+          <div class="chain-item"><span class="who">Eugène « Mariot » BLUKER</span><span class="when">1940–2014</span></div>
+          <div class="chain-item"><span class="who">Corine BLUKER</span><span class="when">1968</span></div>
+        </div>
+      </div>
+
+      <div class="branch-card">
+        <h3><span class="dot marie" style="margin-right:7px;"></span>→ Marie</h3>
+        <p class="via">par <b>Arsène</b>, l'aîné des trois</p>
+        <div class="chain">
+          <div class="chain-item"><span class="who">Philibert BLUKER</span><span class="when">1840–1912</span></div>
+          <div class="chain-item"><span class="who">Arsène BLUKER</span><span class="when">1883–1938</span></div>
+          <div class="chain-item"><span class="who">Arsène BLUKER</span><span class="when">1911–?</span></div>
+          <div class="chain-item"><span class="who">Anne Marie BLUKER</span><span class="when">1935–1998</span></div>
+          <div class="chain-item"><span class="who">Michel TACITE</span><span class="when">?</span></div>
+          <div class="chain-item"><span class="who">Marie TACITE</span><span class="when">—</span></div>
+        </div>
+      </div>
+
+      <div class="branch-card">
+        <h3><span class="dot chloe" style="margin-right:7px;"></span>→ Chloé</h3>
+        <p class="via">par <b>François</b></p>
+        <div class="chain">
+          <div class="chain-item"><span class="who">Philibert BLUKER</span><span class="when">1840–1912</span></div>
+          <div class="chain-item"><span class="who">François BLUKER</span><span class="when">1887–1974</span></div>
+          <div class="chain-item"><span class="who">Marie Augustina BLUKER</span><span class="when">1925–2003</span></div>
+          <div class="chain-item"><span class="who">Michel BLUKER</span><span class="when">1941</span></div>
+          <div class="chain-item"><span class="who">Joël BLUKER</span><span class="when">?</span></div>
+          <div class="chain-item"><span class="who">Chloé BLUKER</span><span class="when">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kinship" style="margin-top: 20px;">
+      <b>Entre elles :</b> Corine descend d'Antoine, Marie d'Arsène, Chloé de François — trois frères, fils de Philibert et Vitaline. Toutes trois se rejoignent chez ce même couple, à Saint-Leu.
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div class="eyebrow">Toute la famille</div>
+      <h2>La descendance de Philibert et Vitaline</h2>
+      <p>Leurs neuf enfants, puis leurs petits-enfants, puis leurs arrière-petits-enfants — une génération à la fois. On s'arrête à cette 3ᵉ génération pour rester lisible.</p>
+    </div>
+
+    <div class="desc-stats">
+      <div class="desc-stat"><div class="n">369</div><div class="l">descendant·es identifié·es sur 5 générations</div></div>
+      <div class="desc-stat"><div class="n accent">22</div><div class="l">mort·es avant 18 ans, sur les 3 premières générations (76 dont l'âge est connu)</div></div>
+    </div>
+
+    <div class="desc-legend">
+      <span><span class="dot corine"></span> Ascendants de Corine</span>
+      <span><span class="dot marie"></span> Ascendants de Marie</span>
+      <span><span class="dot chloe"></span> Ascendants de Chloé</span>
+    </div>
+
+    <h3 class="desc-step-title">1. Leurs enfants</h3>
+    <div class="desc-wrap">
+<ul class="desc-list desc-root">
+  <li><span class="who">Marie Louise BLUKER</span> <span class="when">1875–1897</span></li>
+  <li><span class="who">Albertine BLUKER</span> <span class="when">1878–1908</span></li>
+  <li><span class="who">Philibert BLUKER</span> <span class="when">1880–?</span></li>
+  <li><span class="who died-child">Marie Berthe BLUKER</span> <span class="when">1881–1882</span> <span class="child-tag">morte à 1 an</span></li>
+  <li><span class="who branch-marie">Arsène BLUKER</span> <span class="when">1883–1938</span></li>
+  <li><span class="who">Monique BLUKER (dite Marie)</span> <span class="when">1884–1935</span></li>
+  <li><span class="who branch-chloe">François BLUKER</span> <span class="when">1887–1974</span></li>
+  <li><span class="who branch-corine">Antoine BLUKER (dit Emmanuel Likèr)</span> <span class="when">1888–1986</span></li>
+  <li><span class="who died-child">Olivier BLUKER</span> <span class="when">1890–1895</span> <span class="child-tag">mort à 5 ans</span></li>
+</ul>
+    </div>
+
+    <h3 class="desc-step-title">2. En ajoutant les petits-enfants</h3>
+    <div class="desc-wrap">
+<ul class="desc-list desc-root">
+  <li>
+    <details open>
+      <summary><span class="who">Marie Louise BLUKER</span> <span class="when">1875–1897</span> <span class="count">(2 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who died-child">Lisette BLUKER</span> <span class="when">1896–1896</span> <span class="child-tag">morte en bas âge</span></li>
+    <li><span class="who died-child">Marie Léocadie BLUKER</span> <span class="when">1896–1896</span> <span class="child-tag">morte en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who">Albertine BLUKER</span> <span class="when">1878–1908</span> <span class="count">(8 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who died-child">Joseph Albert BLUKER</span> <span class="when">1895–1896</span> <span class="child-tag">mort à 1 an</span></li>
+    <li><span class="who died-child">Marie Agathina BLUKER</span> <span class="when">1897–1898</span> <span class="child-tag">morte à 1 an</span></li>
+    <li><span class="who">Augustin BLUKER</span> <span class="when">1899–1948</span></li>
+    <li><span class="who died-child">Lucia BLUKER</span> <span class="when">1900–1902</span> <span class="child-tag">morte à 2 ans</span></li>
+    <li><span class="who">Adrien BLUKER</span> <span class="when">1902–1969</span></li>
+    <li><span class="who">Joseph Philomen BLUKER</span> <span class="when">1904–1922</span></li>
+    <li><span class="who">Pierre Antoine BLUKER</span> <span class="when">1906–?</span></li>
+    <li><span class="who died-child">Vitaline BLUKER</span> <span class="when">1908–1908</span> <span class="child-tag">morte en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who">Philibert BLUKER</span> <span class="when">1880–?</span> <span class="count">(1 enfant)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who died-child">René BLUKER</span> <span class="when">1909–1909</span> <span class="child-tag">mort en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li><span class="who died-child">Marie Berthe BLUKER</span> <span class="when">1881–1882</span> <span class="child-tag">morte à 1 an</span></li>
+  <li>
+    <details open>
+      <summary><span class="who branch-marie">Arsène BLUKER</span> <span class="when">1883–1938</span> <span class="count">(9 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who">Émilien BICLAIRE</span> <span class="when">1909–?</span></li>
+    <li><span class="who branch-marie">Arsène BLUKER</span> <span class="when">1911–?</span></li>
+    <li><span class="who">Dominique BLUKER</span> <span class="when">1914–1933</span></li>
+    <li><span class="who died-child">Auguste BLUKER</span> <span class="when">1916–1925</span> <span class="child-tag">mort à 9 ans</span></li>
+    <li><span class="who">Paul BLUKER</span> <span class="when">1918–1980</span></li>
+    <li><span class="who">Étienne BLUKER</span> <span class="when">1921–?</span></li>
+    <li><span class="who">Amélie BLUKER (dite Marthe)</span> <span class="when">1923–2007</span></li>
+    <li><span class="who">Monique BLUKER (dite Mélanie)</span> <span class="when">1925–2023</span></li>
+    <li><span class="who">Virginie BLUKER</span> <span class="when">1929–2015</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who">Monique BLUKER (dite Marie)</span> <span class="when">1884–1935</span> <span class="count">(7 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who">Marie Bénédicta HAMILCARO (dite Tata)</span> <span class="when">1908–1934</span></li>
+    <li><span class="who">Marie Antoinette HAMILCARO</span> <span class="when">1909–?</span></li>
+    <li><span class="who">Marie Angélina HAMILCARO (dite Angèle)</span> <span class="when">1912–1940</span></li>
+    <li><span class="who">Emmanuel Pierre HAMILCARO</span> <span class="when">1914–1934</span></li>
+    <li><span class="who">Jeanne HAMILCARO</span> <span class="when">1917–1999</span></li>
+    <li><span class="who died-child">Alexandre HAMILCARO</span> <span class="when">1919–1919</span> <span class="child-tag">mort en bas âge</span></li>
+    <li><span class="who died-child">Joseph HAMILCARO</span> <span class="when">1919–1919</span> <span class="child-tag">mort en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who branch-chloe">François BLUKER</span> <span class="when">1887–1974</span> <span class="count">(9 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who">Marie Judith BLÜKER (dite Sasaz)</span> <span class="when">1921–2019</span></li>
+    <li><span class="who">Joseph François BLÜKER (dit Néné)</span> <span class="when">1923–1987</span></li>
+    <li><span class="who branch-chloe">Marie Augustina BLUKER (dite Thérèse)</span> <span class="when">1925–2003</span></li>
+    <li><span class="who died-child">Elisabeth BLUKER (dite Gabrielle)</span> <span class="when">1927–1940</span> <span class="child-tag">morte à 13 ans</span></li>
+    <li><span class="who died-child">Michel BLUKER</span> <span class="when">1929–1930</span> <span class="child-tag">mort à 1 an</span></li>
+    <li><span class="who">Marc BLUKER (dit Léonel)</span> <span class="when">1931–2013</span></li>
+    <li><span class="who">Auguste Augustin BLUKER (dit Lolo)</span> <span class="when">1933–1984</span></li>
+    <li><span class="who">Joseph Louis BLUKER (dit Mulo)</span> <span class="when">1933–1999</span></li>
+    <li><span class="who">Catherine BLUKER (dite Titide)</span> <span class="when">1936–1992</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who branch-corine">Antoine BLUKER (dit Emmanuel Likèr)</span> <span class="when">1888–1986</span> <span class="count">(9 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who">Antoine Joseph &quot;Célestin&quot; BLUKER</span> <span class="when">1913–1943</span></li>
+    <li><span class="who branch-corine">Michel BLUKER</span> <span class="when">1915–1995</span></li>
+    <li><span class="who died-child">Antoine BLUKER</span> <span class="when">1917–1932</span> <span class="child-tag">mort à 15 ans</span></li>
+    <li><span class="who died-child">Marie Léoncia BLUKER</span> <span class="when">1920–1932</span> <span class="child-tag">morte à 12 ans</span></li>
+    <li><span class="who">Gaston BLUKER</span> <span class="when">1923–2013</span></li>
+    <li><span class="who">René BLUKER</span> <span class="when">1925–2001</span></li>
+    <li><span class="who">Elianne BLUKER</span> <span class="when">1928–2019</span></li>
+    <li><span class="who">Marie &quot;Paula&quot; BLUKER</span> <span class="when">1931–2005</span></li>
+    <li><span class="who">Noël &quot;Maurice&quot; BLUKER</span> <span class="when">1933–2002</span></li>
+      </ul>
+    </details>
+  </li>
+  <li><span class="who died-child">Olivier BLUKER</span> <span class="when">1890–1895</span> <span class="child-tag">mort à 5 ans</span></li>
+</ul>
+    </div>
+
+    <h3 class="desc-step-title">3. En ajoutant les arrière-petits-enfants</h3>
+    <div class="desc-wrap">
+<ul class="desc-list desc-root">
+  <li>
+    <details open>
+      <summary><span class="who">Marie Louise BLUKER</span> <span class="when">1875–1897</span> <span class="count">(2 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who died-child">Lisette BLUKER</span> <span class="when">1896–1896</span> <span class="child-tag">morte en bas âge</span></li>
+    <li><span class="who died-child">Marie Léocadie BLUKER</span> <span class="when">1896–1896</span> <span class="child-tag">morte en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who">Albertine BLUKER</span> <span class="when">1878–1908</span> <span class="count">(8 enfants)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who died-child">Joseph Albert BLUKER</span> <span class="when">1895–1896</span> <span class="child-tag">mort à 1 an</span></li>
+    <li><span class="who died-child">Marie Agathina BLUKER</span> <span class="when">1897–1898</span> <span class="child-tag">morte à 1 an</span></li>
+    <li><span class="who">Augustin BLUKER</span> <span class="when">1899–1948</span></li>
+    <li><span class="who died-child">Lucia BLUKER</span> <span class="when">1900–1902</span> <span class="child-tag">morte à 2 ans</span></li>
+    <li><span class="who">Adrien BLUKER</span> <span class="when">1902–1969</span></li>
+    <li><span class="who">Joseph Philomen BLUKER</span> <span class="when">1904–1922</span></li>
+    <li><span class="who">Pierre Antoine BLUKER</span> <span class="when">1906–?</span></li>
+    <li><span class="who died-child">Vitaline BLUKER</span> <span class="when">1908–1908</span> <span class="child-tag">morte en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who">Philibert BLUKER</span> <span class="when">1880–?</span> <span class="count">(1 enfant)</span></summary>
+      <ul class="desc-list">
+    <li><span class="who died-child">René BLUKER</span> <span class="when">1909–1909</span> <span class="child-tag">mort en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li><span class="who died-child">Marie Berthe BLUKER</span> <span class="when">1881–1882</span> <span class="child-tag">morte à 1 an</span></li>
+  <li>
+    <details open>
+      <summary><span class="who branch-marie">Arsène BLUKER</span> <span class="when">1883–1938</span> <span class="count">(9 enfants)</span></summary>
+      <ul class="desc-list">
+    <li>
+      <details open>
+        <summary><span class="who">Émilien BICLAIRE</span> <span class="when">1909–?</span> <span class="count">(9 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Toussaint BICLAIRE</span> <span class="when">1933–2015</span></li>
+      <li><span class="who">Alexin BICLAIRE</span> <span class="when">1935–2021</span></li>
+      <li><span class="who">Iréné BICLAIR</span> <span class="when">1937–2010</span></li>
+      <li><span class="who">Solange BICLAIRE</span> <span class="when">1939–?</span></li>
+      <li><span class="who">Algéris BICLAIRE</span> <span class="when">1941–2019</span></li>
+      <li><span class="who">Eslien BICLAIRE</span> <span class="when">1943–2015</span></li>
+      <li><span class="who">Aristène BICLAIRE</span> <span class="when">1953–?</span></li>
+      <li><span class="who">Virginie BICLAIRE</span></li>
+      <li><span class="who">Stelliane BICLAIRE</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who branch-marie">Arsène BLUKER</span> <span class="when">1911–?</span> <span class="count">(4 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who branch-marie">Anne Marie BLUKER</span> <span class="when">1935–1998</span></li>
+      <li><span class="who">Marc Justin BLUKER</span> <span class="when">1936–2024</span></li>
+      <li><span class="who">Roland BLUKER</span> <span class="when">1939–1986</span></li>
+      <li><span class="who">Maurice BLUKER</span> <span class="when">1941–?</span></li>
+        </ul>
+      </details>
+    </li>
+    <li><span class="who">Dominique BLUKER</span> <span class="when">1914–1933</span></li>
+    <li><span class="who died-child">Auguste BLUKER</span> <span class="when">1916–1925</span> <span class="child-tag">mort à 9 ans</span></li>
+    <li>
+      <details open>
+        <summary><span class="who">Paul BLUKER</span> <span class="when">1918–1980</span> <span class="count">(11 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Augustin BLUKER</span> <span class="when">1940–2021</span></li>
+      <li><span class="who">Augusta BLUKER</span> <span class="when">1943–2022</span></li>
+      <li><span class="who">Marie Thérèsia BLUKER</span> <span class="when">1945–?</span></li>
+      <li><span class="who">Angéla BLUKER</span></li>
+      <li><span class="who">Paulette BLUKER</span></li>
+      <li><span class="who">Moulvalia BLUKER</span></li>
+      <li><span class="who">Margot BLUKER</span> <span class="when">1955–2022</span></li>
+      <li><span class="who">Jean Paul BLUKER</span></li>
+      <li><span class="who">Irène BLUKER</span></li>
+      <li><span class="who">Henri BLUKER</span></li>
+      <li><span class="who">Gilles BLUKER (dit Moril)</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Étienne BLUKER</span> <span class="when">1921–?</span> <span class="count">(1 enfant)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Marie Olivia BLUKER</span> <span class="when">1944–?</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Amélie BLUKER (dite Marthe)</span> <span class="when">1923–2007</span> <span class="count">(6 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Estellie PANJY</span> <span class="when">1943–?</span></li>
+      <li><span class="who">Henri Paul PANJY</span> <span class="when">1946–?</span></li>
+      <li><span class="who">Antoine PANJY</span></li>
+      <li><span class="who died-child">Denise Marie RINGUIN</span> <span class="when">1940–1940</span> <span class="child-tag">morte en bas âge</span></li>
+      <li><span class="who">Célestin BLUKER</span> <span class="when">1941–2022</span></li>
+      <li><span class="who">Julien PANJY</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Monique BLUKER (dite Mélanie)</span> <span class="when">1925–2023</span> <span class="count">(9 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Marie Stéphanie DIBLAR</span> <span class="when">1949–?</span></li>
+      <li><span class="who">Anselme DIBLAR</span> <span class="when">1951–?</span></li>
+      <li><span class="who">Léonard DIBLAR</span> <span class="when">1952–?</span></li>
+      <li><span class="who">Honoré Jean DIBLAR</span> <span class="when">1954–?</span></li>
+      <li><span class="who">Luc DIBLAR</span> <span class="when">1955–?</span></li>
+      <li><span class="who">Marie Charlette DIBLAR</span> <span class="when">1957–?</span></li>
+      <li><span class="who">Eloi DIBLAR</span> <span class="when">1958–?</span></li>
+      <li><span class="who">Jean Philippe DIBLAR</span> <span class="when">1962–?</span></li>
+      <li><span class="who">Marie Daisy DIBLAR</span> <span class="when">1966–?</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Virginie BLUKER</span> <span class="when">1929–2015</span> <span class="count">(1 enfant)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">VILDEMAN</span></li>
+        </ul>
+      </details>
+    </li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who">Monique BLUKER (dite Marie)</span> <span class="when">1884–1935</span> <span class="count">(7 enfants)</span></summary>
+      <ul class="desc-list">
+    <li>
+      <details open>
+        <summary><span class="who">Marie Bénédicta HAMILCARO (dite Tata)</span> <span class="when">1908–1934</span> <span class="count">(1 enfant)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who died-child">Joseph Furlin BLUKER</span> <span class="when">1934–1935</span> <span class="child-tag">mort à 1 an</span></li>
+        </ul>
+      </details>
+    </li>
+    <li><span class="who">Marie Antoinette HAMILCARO</span> <span class="when">1909–?</span></li>
+    <li><span class="who">Marie Angélina HAMILCARO (dite Angèle)</span> <span class="when">1912–1940</span></li>
+    <li><span class="who">Emmanuel Pierre HAMILCARO</span> <span class="when">1914–1934</span></li>
+    <li>
+      <details open>
+        <summary><span class="who">Jeanne HAMILCARO</span> <span class="when">1917–1999</span> <span class="count">(9 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Marie Monique ROCROU</span> <span class="when">1947–?</span></li>
+      <li><span class="who">Jean Claude ROCROU</span></li>
+      <li><span class="who">Marie Thérèse ROCROU</span> <span class="when">?–1982</span></li>
+      <li><span class="who">Danielle ROCROU</span></li>
+      <li><span class="who">François ROCROU</span></li>
+      <li><span class="who">Jacques ROCROU</span></li>
+      <li><span class="who">Noël ROCROU</span></li>
+      <li><span class="who">Marie Georges ROCROU</span></li>
+      <li><span class="who">Geneviève Marie Michelle ROCROU</span></li>
+        </ul>
+      </details>
+    </li>
+    <li><span class="who died-child">Alexandre HAMILCARO</span> <span class="when">1919–1919</span> <span class="child-tag">mort en bas âge</span></li>
+    <li><span class="who died-child">Joseph HAMILCARO</span> <span class="when">1919–1919</span> <span class="child-tag">mort en bas âge</span></li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who branch-chloe">François BLUKER</span> <span class="when">1887–1974</span> <span class="count">(9 enfants)</span></summary>
+      <ul class="desc-list">
+    <li>
+      <details open>
+        <summary><span class="who">Marie Judith BLÜKER (dite Sasaz)</span> <span class="when">1921–2019</span> <span class="count">(10 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Narcien AARON</span> <span class="when">1949–?</span></li>
+      <li><span class="who">Gilette AARON</span> <span class="when">1950–?</span></li>
+      <li><span class="who">Fidélio AARON (dit Élio)</span> <span class="when">1951–?</span></li>
+      <li><span class="who">Claudette AARON</span> <span class="when">1953–?</span></li>
+      <li><span class="who">Alix AARON</span> <span class="when">1954–?</span></li>
+      <li><span class="who">Nicaise AARON</span> <span class="when">1956–?</span></li>
+      <li><span class="who">Vivian AARON</span> <span class="when">1958–?</span></li>
+      <li><span class="who">Joël AARON</span> <span class="when">1960–?</span></li>
+      <li><span class="who">Chantal AARON</span> <span class="when">1961–?</span></li>
+      <li><span class="who">Reine Marie AARON</span> <span class="when">1963–?</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Joseph François BLÜKER (dit Néné)</span> <span class="when">1923–1987</span> <span class="count">(9 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Yves BLUKER</span></li>
+      <li><span class="who">Volange BLUKER</span></li>
+      <li><span class="who">Iréné BLUKER</span></li>
+      <li><span class="who">Elisabeth BLUKER (dite Zabeth)</span></li>
+      <li><span class="who">Claudine BLUKER</span></li>
+      <li><span class="who">Marie Michelle BLUKER</span></li>
+      <li><span class="who">Céline BLUKER</span></li>
+      <li><span class="who">Jean René BLUKER</span></li>
+      <li><span class="who">Daisy BLUKER</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who branch-chloe">Marie Augustina BLUKER (dite Thérèse)</span> <span class="when">1925–2003</span> <span class="count">(11 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Marie &quot;Suzanne&quot; LEBRETON</span> <span class="when">1949–1992</span></li>
+      <li><span class="who">Bernard LEBRETON</span> <span class="when">1957–2007</span></li>
+      <li><span class="who">Jacques LEBRETON</span></li>
+      <li><span class="who">Marianne LEBRETON</span></li>
+      <li><span class="who">Noéline LEBRETON</span></li>
+      <li><span class="who">Philippe LEBRETON</span></li>
+      <li><span class="who">Charlette LEBRETON</span></li>
+      <li><span class="who">Josie LEBRETON</span></li>
+      <li><span class="who">Marie Noelle LEBRETON</span></li>
+      <li><span class="who branch-chloe">Michel BLUKER (dit Jamin)</span> <span class="when">1941–?</span></li>
+      <li><span class="who">Jeannine LEBRETON</span></li>
+        </ul>
+      </details>
+    </li>
+    <li><span class="who died-child">Elisabeth BLUKER (dite Gabrielle)</span> <span class="when">1927–1940</span> <span class="child-tag">morte à 13 ans</span></li>
+    <li><span class="who died-child">Michel BLUKER</span> <span class="when">1929–1930</span> <span class="child-tag">mort à 1 an</span></li>
+    <li><span class="who">Marc BLUKER (dit Léonel)</span> <span class="when">1931–2013</span></li>
+    <li><span class="who">Auguste Augustin BLUKER (dit Lolo)</span> <span class="when">1933–1984</span></li>
+    <li>
+      <details open>
+        <summary><span class="who">Joseph Louis BLUKER (dit Mulo)</span> <span class="when">1933–1999</span> <span class="count">(3 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Lucien BLUKER</span></li>
+      <li><span class="who">Luçay BLUKER</span></li>
+      <li><span class="who">Danil BLUKER</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Catherine BLUKER (dite Titide)</span> <span class="when">1936–1992</span> <span class="count">(13 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Suzelle ZAMY</span></li>
+      <li><span class="who">Vivianne ZAMY</span></li>
+      <li><span class="who">Saint-Ange ZAMY</span></li>
+      <li><span class="who">Raoul ZAMY</span></li>
+      <li><span class="who">Donadieu ZAMY</span></li>
+      <li><span class="who">Alix ZAMY</span></li>
+      <li><span class="who">Gérald ZAMY</span></li>
+      <li><span class="who">Daniella ZAMY</span></li>
+      <li><span class="who">Sylvaine ZAMY</span></li>
+      <li><span class="who">Marie Noëlle ZAMY</span></li>
+      <li><span class="who">Géraldine ZAMY</span></li>
+      <li><span class="who">Cléore ZAMY</span></li>
+      <li><span class="who">Clarine ZAMY</span></li>
+        </ul>
+      </details>
+    </li>
+      </ul>
+    </details>
+  </li>
+  <li>
+    <details open>
+      <summary><span class="who branch-corine">Antoine BLUKER (dit Emmanuel Likèr)</span> <span class="when">1888–1986</span> <span class="count">(9 enfants)</span></summary>
+      <ul class="desc-list">
+    <li>
+      <details open>
+        <summary><span class="who">Antoine Joseph &quot;Célestin&quot; BLUKER</span> <span class="when">1913–1943</span> <span class="count">(3 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who died-child">Anne Marie Lucie BLUKER</span> <span class="when">1934–1940</span> <span class="child-tag">morte à 6 ans</span></li>
+      <li><span class="who">Antoine &quot;Raymond&quot; BLUKER</span> <span class="when">1938–1969</span></li>
+      <li><span class="who died-child">Gabriel Monvil BLUKER</span> <span class="when">1940–1942</span> <span class="child-tag">mort à 2 ans</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who branch-corine">Michel BLUKER</span> <span class="when">1915–1995</span> <span class="count">(11 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who died-child">Marie &quot;Rachelle&quot; Céline BLUKER</span> <span class="when">1939–1940</span> <span class="child-tag">morte à 1 an</span></li>
+      <li><span class="who branch-corine">Eugène &quot;Mariot&quot; BLUKER</span> <span class="when">1940–2014</span></li>
+      <li><span class="who">Joseph &quot;Daniel&quot; BLUKER</span> <span class="when">1942–1965</span></li>
+      <li><span class="who">Marie &quot;Esténie&quot; BLUKER</span> <span class="when">1944–2004</span></li>
+      <li><span class="who">Joseph &quot;Firmin&quot; BLUKER</span> <span class="when">1946–2016</span></li>
+      <li><span class="who">Jean-Paul BLUKER</span> <span class="when">1949–2017</span></li>
+      <li><span class="who">Firmène BLUKER</span> <span class="when">1951–?</span></li>
+      <li><span class="who">Charlot Emmanuel BLUKER</span> <span class="when">1954–2023</span></li>
+      <li><span class="who died-child">Marguerite BLUKER</span> <span class="when">1956–1956</span> <span class="child-tag">morte en bas âge</span></li>
+      <li><span class="who">Jocelyne BLUKER</span> <span class="when">1961–?</span></li>
+      <li><span class="who">Jocelyn BLUKER</span> <span class="when">1961–?</span></li>
+        </ul>
+      </details>
+    </li>
+    <li><span class="who died-child">Antoine BLUKER</span> <span class="when">1917–1932</span> <span class="child-tag">mort à 15 ans</span></li>
+    <li><span class="who died-child">Marie Léoncia BLUKER</span> <span class="when">1920–1932</span> <span class="child-tag">morte à 12 ans</span></li>
+    <li>
+      <details open>
+        <summary><span class="who">Gaston BLUKER</span> <span class="when">1923–2013</span> <span class="count">(7 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Alain BLUKER</span> <span class="when">1952–?</span></li>
+      <li><span class="who">Xavier Joseph BLUKER</span> <span class="when">1956–?</span></li>
+      <li><span class="who">Edith BLUKER</span></li>
+      <li><span class="who">Yvette BLUKER</span></li>
+      <li><span class="who">Edmée BLUKER</span></li>
+      <li><span class="who">Sylvio Régis BLUKER</span> <span class="when">1967–2025</span></li>
+      <li><span class="who">Monique BLUKER</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">René BLUKER</span> <span class="when">1925–2001</span> <span class="count">(10 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Jeannick BLUKER</span> <span class="when">1957–?</span></li>
+      <li><span class="who">Armande BLUKER</span> <span class="when">1958–?</span></li>
+      <li><span class="who">Herland BLUKER</span> <span class="when">1959–?</span></li>
+      <li><span class="who">Micheline BLUKER</span> <span class="when">1961–?</span></li>
+      <li><span class="who">René Paul BLUKER</span> <span class="when">1963–?</span></li>
+      <li><span class="who">Marie Claire BLUKER</span> <span class="when">1965–?</span></li>
+      <li><span class="who">Marie Claude BLUKER</span> <span class="when">1965–?</span></li>
+      <li><span class="who">Odile BLUKER</span> <span class="when">1966–?</span></li>
+      <li><span class="who">Pascaline BLUKER</span></li>
+      <li><span class="who">Géraldine BLUKER</span> <span class="when">1975–?</span></li>
+        </ul>
+      </details>
+    </li>
+    <li><span class="who">Elianne BLUKER</span> <span class="when">1928–2019</span></li>
+    <li>
+      <details open>
+        <summary><span class="who">Marie &quot;Paula&quot; BLUKER</span> <span class="when">1931–2005</span> <span class="count">(5 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Klébert SANDANCE</span></li>
+      <li><span class="who">Bertrand SANDANCE</span></li>
+      <li><span class="who">Yolande SANDANCE</span></li>
+      <li><span class="who">Eric SANDANCE</span></li>
+      <li><span class="who">Jacquelin SANDANCE</span></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details open>
+        <summary><span class="who">Noël &quot;Maurice&quot; BLUKER</span> <span class="when">1933–2002</span> <span class="count">(4 enfants)</span></summary>
+        <ul class="desc-list">
+      <li><span class="who">Cécile BLUKER</span> <span class="when">1967–?</span></li>
+      <li><span class="who">Thérèsie BLUKER</span> <span class="when">1968–?</span></li>
+      <li><span class="who">Carole BLUKER</span> <span class="when">1971–?</span></li>
+      <li><span class="who">Marie Pierre BLUKER</span> <span class="when">1975–?</span></li>
+        </ul>
+      </details>
+    </li>
+      </ul>
+    </details>
+  </li>
+  <li><span class="who died-child">Olivier BLUKER</span> <span class="when">1890–1895</span> <span class="child-tag">mort à 5 ans</span></li>
+</ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div class="eyebrow">En creusant un peu plus</div>
+      <h2>Trois anecdotes trouvées sur cette lignée</h2>
+    </div>
+
+    <div class="anecdotes">
+      <div class="anecdote">
+        <span class="num">1</span>
+        <p><span class="who">Des jumeaux, deux fois.</span> Jocelyne et Jocelyn BLUKER naissent le 11 octobre 1961 — frère et sœur d'Eugène « Mariot » BLUKER, donc oncle et tante de Corine. Une génération plus tôt, Auguste Augustin et Joseph Louis BLUKER naissent jumeaux le 2 juin 1933, frères de Marie Augustina BLUKER — l'arrière-grand-mère de Chloé.</p>
+      </div>
+      <div class="anecdote">
+        <span class="num">2</span>
+        <p><span class="who">Mariée à 16 ans.</span> Anne Marie BLUKER, grand-mère de Marie, épouse Augustin TACITE en 1951 — elle a tout juste 16 ans.</p>
+      </div>
+      <div class="anecdote">
+        <span class="num">3</span>
+        <p><span class="who">Toujours au même endroit.</span> Dieudonné et Monique, leur fils Philibert, et son épouse Vitaline meurent tous au même lieu-dit : Piton, à Saint-Leu. Vitaline y est aussi née.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="sig">Jordan, qui descend lui aussi de Philibert par Corine</div>
+    Rapport généré à partir de l'arbre généalogique familial (données Heredis).
+  </footer>
+
+</div>

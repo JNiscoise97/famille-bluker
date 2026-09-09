@@ -1,0 +1,231 @@
+<title>Qui est qui, à voix haute</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Piazzolla:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --ink: #1E2A22;
+    --ink-soft: #4B5A50;
+    --paper: #E7E6DC;
+    --paper-raised: #F1F0E7;
+    --accent: #A63A2C;
+    --accent-soft: #E7CFC6;
+    --teal: #1F6B62;
+    --teal-soft: #D6E6E2;
+    --corine: #A8791C;
+    --marie: #7A4F84;
+    --chloe: #2A6E96;
+    --line: rgba(30, 42, 34, 0.14);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #E9E7DA; --ink-soft: #B7BDB1; --paper: #161F1A; --paper-raised: #1D2822;
+      --accent: #D97456; --accent-soft: #3B241D; --teal: #5CB3A5; --teal-soft: #1B3330;
+      --corine: #D9AE52; --marie: #C79BD1; --chloe: #6FB3DC;
+      --line: rgba(233, 231, 218, 0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #E9E7DA; --ink-soft: #B7BDB1; --paper: #161F1A; --paper-raised: #1D2822;
+    --accent: #D97456; --accent-soft: #3B241D; --teal: #5CB3A5; --teal-soft: #1B3330;
+    --corine: #D9AE52; --marie: #C79BD1; --chloe: #6FB3DC;
+    --line: rgba(233, 231, 218, 0.14);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.55;
+  }
+  .page { max-width: 620px; margin: 0 auto; padding: 32px 20px 70px; }
+
+  .eyebrow {
+    font-weight: 700; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  h1 {
+    font-family: 'Piazzolla', serif; font-weight: 600;
+    font-size: clamp(26px, 7vw, 34px); margin: 8px 0 6px; text-wrap: balance;
+  }
+  .subtitle { color: var(--ink-soft); font-size: 14.5px; margin: 0 0 26px; }
+
+  .player {
+    background: var(--paper-raised);
+    border-radius: 18px;
+    padding: 22px 20px;
+    margin-bottom: 28px;
+  }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+  button.ctrl {
+    font-family: 'Karla', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 22px;
+    min-height: 48px;
+    cursor: pointer;
+    flex: 1;
+    min-width: 120px;
+  }
+  #play-btn { background: var(--ink); color: var(--paper); }
+  #play-btn.playing { background: var(--accent); }
+  #restart-btn { background: transparent; color: var(--ink); border: 1px solid var(--line); flex: 0 1 auto; min-width: auto; }
+  .status { margin-top: 12px; font-size: 12.5px; color: var(--ink-soft); min-height: 1.2em; }
+  .unsupported {
+    display: none;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  .script { display: flex; flex-direction: column; gap: 14px; }
+  .line {
+    font-size: 16px;
+    padding: 2px 0 2px 12px;
+    border-left: 3px solid var(--line);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .line.active {
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .line b.corine { color: var(--corine); }
+  .line b.marie { color: var(--marie); }
+  .line b.chloe { color: var(--chloe); }
+</style>
+
+<div class="page">
+  <div class="eyebrow">À écouter ensemble</div>
+  <h1>Qui est qui, par rapport à Philibert et Vitaline</h1>
+  <p class="subtitle">Appuyez sur Lecture — le téléphone lit le texte à voix haute. Fonctionne sans connexion une fois la page chargée.</p>
+
+  <div class="player">
+    <div class="controls">
+      <button class="ctrl" id="play-btn" onclick="togglePlay()">▶ Lecture</button>
+      <button class="ctrl" id="restart-btn" onclick="restart()">⟲ Recommencer</button>
+    </div>
+    <div class="status" id="status"></div>
+    <div class="unsupported" id="unsupported">La lecture à voix haute n'est pas disponible sur ce navigateur — le texte reste lisible juste en dessous.</div>
+  </div>
+
+  <div class="script" id="script"></div>
+</div>
+
+<script>
+  const lines = [
+    "Bonjour à toutes les trois.",
+    "Je vais vous expliquer comment vous êtes reliées, et par quels mariages, en partant de vos ancêtres communs.",
+    "Tout part d'un couple : Philibert Bluker et Vitaline Indiana. Ils se sont mariés le 7 juillet 1877, à Saint-Leu, sur l'île de la Réunion.",
+    "Philibert est né en 1840. Lui, ses parents, et ses deux grands-mères, ont tous connu l'esclavage. Ils ont été libérés le même jour, le 27 avril 1848, quand l'esclavage a été aboli à la Réunion. Philibert avait alors huit ans.",
+    "Philibert et Vitaline ont eu neuf enfants ensemble. Trois de leurs fils sont le point de départ de vos trois familles : Antoine, Arsène, et François. Ce sont trois frères. Arsène est l'aîné, né en 1883. François est le deuxième, né en 1887. Antoine est le benjamin, né en 1888.",
+    "<b class=\"corine\">Corine</b>, ta lignée passe par Antoine, le benjamin des trois frères.",
+    "Antoine Bluker a épousé Coundéaman Tanjama. Leur fils Michel Bluker a épousé Marie Valérie Mammosa. Leur fils, Eugène, qu'on appelait Mariot, a épousé Herminie, qu'on appelait Yolande Hyppolite. Et leur fille, c'est toi, Corine.",
+    "<b class=\"marie\">Marie</b>, ta lignée passe par Arsène, le frère aîné des trois.",
+    "Arsène Bluker a épousé Mardaye Latchimy. Leur fils, qui portait aussi le prénom Arsène, a épousé Marguerite Vinguédassalom. Leur fille, Anne Marie Bluker, a épousé Augustin Tacite — elle n'avait que seize ans au moment du mariage. Leur fils, Michel Tacite, est ton père.",
+    "<b class=\"chloe\">Chloé</b>, ta lignée passe par François, le deuxième des trois frères.",
+    "François Bluker a épousé Marie Augustina Gasp. Leur fille s'appelle aussi Marie Augustina. Son fils, Michel Bluker, est né en 1941. Michel a épousé Marie Thérèse, qu'on appelait Marcelle Fossy. Leur fils, Joël Bluker, est ton père.",
+    "Voilà donc comment vous êtes reliées.",
+    "<b class=\"corine\">Corine</b> est l'arrière-arrière-petite-fille de Philibert et Vitaline, par Antoine.",
+    "<b class=\"marie\">Marie</b> et <b class=\"chloe\">Chloé</b> sont leurs arrière-arrière-arrière-petites-filles, une génération plus loin — Marie par Arsène, Chloé par François.",
+    "Corine et Marie se rejoignent chez Antoine et Arsène, deux frères. Corine et Chloé se rejoignent chez Antoine et François. Et Marie et Chloé se rejoignent chez Arsène et François.",
+    "Vous êtes cousines toutes les trois, par ce même couple, à Saint-Leu, il y a cent cinquante ans."
+  ];
+
+  const scriptEl = document.getElementById('script');
+  lines.forEach((html, i) => {
+    const div = document.createElement('div');
+    div.className = 'line';
+    div.id = 'line-' + i;
+    div.innerHTML = html;
+    scriptEl.appendChild(div);
+  });
+
+  const synth = window.speechSynthesis;
+  const playBtn = document.getElementById('play-btn');
+  const statusEl = document.getElementById('status');
+  let currentIndex = 0;
+  let isPlaying = false;
+
+  if (!synth) {
+    document.getElementById('unsupported').style.display = 'block';
+    playBtn.disabled = true;
+  }
+
+  function plainText(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  }
+
+  function pickVoice() {
+    const voices = synth.getVoices();
+    return voices.find(v => v.lang === 'fr-FR') || voices.find(v => v.lang && v.lang.startsWith('fr')) || null;
+  }
+
+  function highlight(i) {
+    document.querySelectorAll('.line.active').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById('line-' + i);
+    if (el) {
+      el.classList.add('active');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function speakFrom(i) {
+    if (i >= lines.length) {
+      isPlaying = false;
+      playBtn.textContent = '▶ Lecture';
+      playBtn.classList.remove('playing');
+      statusEl.textContent = 'Terminé.';
+      currentIndex = 0;
+      return;
+    }
+    currentIndex = i;
+    highlight(i);
+    statusEl.textContent = (i + 1) + ' / ' + lines.length;
+    const utter = new SpeechSynthesisUtterance(plainText(lines[i]));
+    utter.lang = 'fr-FR';
+    const voice = pickVoice();
+    if (voice) utter.voice = voice;
+    utter.rate = 0.95;
+    utter.onend = () => { if (isPlaying) speakFrom(i + 1); };
+    synth.speak(utter);
+  }
+
+  function togglePlay() {
+    if (!synth) return;
+    if (isPlaying) {
+      synth.cancel();
+      isPlaying = false;
+      playBtn.textContent = '▶ Lecture';
+      playBtn.classList.remove('playing');
+      statusEl.textContent = 'Pause.';
+      return;
+    }
+    isPlaying = true;
+    playBtn.textContent = '❚❚ Pause';
+    playBtn.classList.add('playing');
+    speakFrom(currentIndex);
+  }
+
+  function restart() {
+    if (synth) synth.cancel();
+    isPlaying = false;
+    currentIndex = 0;
+    playBtn.textContent = '▶ Lecture';
+    playBtn.classList.remove('playing');
+    statusEl.textContent = '';
+    document.querySelectorAll('.line.active').forEach(el => el.classList.remove('active'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  if (synth) {
+    synth.onvoiceschanged = () => {};
+  }
+</script>
