@@ -1,4 +1,6 @@
 <title>Trois branches, un ancêtre</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Piazzolla:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
@@ -37,18 +39,23 @@
   }
 
   * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body {
     margin: 0;
     background: var(--paper);
     color: var(--ink);
     font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
-    line-height: 1.55;
+    font-size: 17px;
+    line-height: 1.6;
   }
   h1, h2, h3 { font-family: 'Piazzolla', serif; font-weight: 600; text-wrap: balance; margin: 0; }
-  .page { max-width: 680px; margin: 0 auto; padding: 0 18px 70px; }
+  .page { max-width: 100%; width: 100%; margin: 0 auto; padding: 0 20px 70px; }
+  @media (min-width: 720px) {
+    .page { max-width: 700px; }
+  }
 
   .eyebrow {
-    font-weight: 700; font-size: 11.5px; letter-spacing: 0.1em;
+    font-weight: 700; font-size: 13.5px; letter-spacing: 0.1em;
     text-transform: uppercase; color: var(--accent);
   }
 
@@ -61,25 +68,25 @@
     margin-bottom: 20px;
   }
   .navbar-title {
-    font-family: 'Piazzolla', serif; font-weight: 600; font-size: 17px;
-    text-align: center; padding: 6px 18px 10px;
+    font-family: 'Piazzolla', serif; font-weight: 600; font-size: 20px;
+    text-align: center; padding: 6px 18px 12px;
   }
   .navtabs {
-    display: flex; gap: 8px; overflow-x: auto;
-    padding: 0 18px 4px;
+    display: flex; gap: 9px; overflow-x: auto;
+    padding: 0 20px 6px;
     -webkit-overflow-scrolling: touch;
   }
   .navtabs::-webkit-scrollbar { display: none; }
   .navtab {
     flex: 0 0 auto;
     font-family: 'Karla', sans-serif;
-    font-weight: 600; font-size: 13px;
+    font-weight: 600; font-size: 15.5px;
     color: var(--ink-soft);
     background: var(--paper-raised);
     border: 1px solid var(--line);
     border-radius: 999px;
-    padding: 9px 15px;
-    min-height: 38px;
+    padding: 11px 17px;
+    min-height: 46px;
     cursor: pointer;
     white-space: nowrap;
   }
@@ -88,41 +95,41 @@
   .view { display: none; }
   .view.active { display: block; }
 
-  .view-head { margin-bottom: 20px; }
-  .view-head h2 { font-size: 24px; margin-top: 6px; }
-  .view-head p { color: var(--ink-soft); margin: 8px 0 0; font-size: 14.5px; }
+  .view-head { margin-bottom: 22px; }
+  .view-head h2 { font-size: 29px; margin-top: 6px; }
+  .view-head p { color: var(--ink-soft); margin: 10px 0 0; font-size: 17px; }
 
-  section.block { margin-top: 30px; }
+  section.block { margin-top: 32px; }
   section.block:first-of-type { margin-top: 0; }
-  .block-title { font-size: 13px; font-weight: 700; color: var(--teal); margin-bottom: 10px; }
+  .block-title { font-size: 15.5px; font-weight: 700; color: var(--teal); margin-bottom: 12px; }
 
   /* ---------- Simple stacked cards (mobile-safe: no SVG geometry to desync) ---------- */
-  .stack { display: flex; flex-direction: column; gap: 12px; }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
   .card {
     background: var(--paper-raised);
     border-radius: 14px;
-    padding: 14px 16px;
+    padding: 16px 18px;
   }
   .card.root { background: var(--teal-soft); border: 1px solid var(--teal); text-align: center; }
-  .card .name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 15.5px; }
-  .card .years { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
-  .card .marriage { font-size: 12.5px; color: var(--ink-soft); margin-top: 6px; }
+  .card .name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 18px; }
+  .card .years { font-size: 14.5px; color: var(--ink-soft); margin-top: 3px; }
+  .card .marriage { font-size: 15px; color: var(--ink-soft); margin-top: 7px; }
   .card .marriage b { color: var(--ink); font-weight: 600; }
 
   /* branch-son cards on the "liens" page */
-  .branch-card { background: var(--paper-raised); border-radius: 14px; padding: 14px 16px; text-align: center; }
-  .branch-parent { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 14.5px; }
-  .branch-parent .byears { font-family: 'Karla', sans-serif; font-weight: 400; font-size: 12px; color: var(--ink-soft); margin-left: 6px; }
-  .branch-marr { font-size: 12px; color: var(--ink-soft); margin: 6px 0; }
-  .branch-link { font-size: 11.5px; color: var(--ink-soft); margin: 6px 0; }
+  .branch-card { background: var(--paper-raised); border-radius: 14px; padding: 16px 18px; text-align: center; }
+  .branch-parent { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 17px; }
+  .branch-parent .byears { font-family: 'Karla', sans-serif; font-weight: 400; font-size: 14.5px; color: var(--ink-soft); margin-left: 6px; }
+  .branch-marr { font-size: 14.5px; color: var(--ink-soft); margin: 7px 0; }
+  .branch-link { font-size: 14px; color: var(--ink-soft); margin: 7px 0; }
   .branch-target { display: inline-flex; align-items: center; gap: 6px; }
-  .branch-target-name { font-weight: 700; font-size: 14.5px; }
+  .branch-target-name { font-weight: 700; font-size: 17px; }
 
-  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; vertical-align: middle; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; }
   .dot.corine { background: var(--corine); } .dot.marie { background: var(--marie); } .dot.chloe { background: var(--chloe); }
   .c-corine { color: var(--corine); } .c-marie { color: var(--marie); } .c-chloe { color: var(--chloe); }
 
-  .kinship { background: var(--teal-soft); border-radius: 14px; padding: 16px 18px; font-size: 14.5px; margin-top: 20px; }
+  .kinship { background: var(--teal-soft); border-radius: 14px; padding: 18px 20px; font-size: 17px; margin-top: 22px; }
   .kinship b { color: var(--teal); }
 
 
@@ -131,42 +138,42 @@
   .chain-person {
     background: var(--paper-raised);
     border-radius: 14px;
-    padding: 14px 16px;
+    padding: 16px 18px;
     text-align: center;
   }
   .chain-person.target { color: var(--paper); }
   .chain-person.target.corine { background: var(--corine); }
   .chain-person.target.marie { background: var(--marie); }
   .chain-person.target.chloe { background: var(--chloe); }
-  .chain-person .cp-name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 15.5px; }
-  .chain-person .cp-years { font-size: 12px; opacity: 0.85; margin-top: 2px; }
+  .chain-person .cp-name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 18px; }
+  .chain-person .cp-years { font-size: 14.5px; opacity: 0.85; margin-top: 3px; }
   .cp-photo {
     display: block;
-    width: 68px; height: 68px;
+    width: 82px; height: 82px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 auto 8px;
+    margin: 0 auto 10px;
     box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px var(--line);
     cursor: pointer;
   }
   .chain-person.target .cp-photo { box-shadow: 0 0 0 2px currentColor, 0 0 0 1px var(--paper) inset; }
   .cm-photo {
-    width: 34px; height: 34px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     object-fit: cover;
     vertical-align: middle;
-    margin-right: 7px;
+    margin-right: 8px;
     cursor: pointer;
     box-shadow: 0 0 0 1px var(--line);
   }
   .chain-marriage {
     text-align: center;
-    font-size: 12.5px;
+    font-size: 15px;
     color: var(--ink-soft);
-    padding: 8px 6px;
+    padding: 9px 6px;
   }
-  .chain-marriage .note { display: block; font-size: 11px; margin-top: 1px; }
-  .chain-down { text-align: center; color: var(--line); font-size: 16px; line-height: 1; }
+  .chain-marriage .note { display: block; font-size: 13.5px; margin-top: 1px; }
+  .chain-down { text-align: center; color: var(--line); font-size: 18px; line-height: 1; }
 
   /* ---------- Lightbox (tap a photo to see it full-size) ---------- */
   .lightbox {
@@ -181,69 +188,69 @@
   .lightbox img { max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
   .lightbox-back {
     position: fixed; top: 16px; left: 16px; z-index: 201;
-    font-family: 'Karla', sans-serif; font-weight: 700; font-size: 14px;
+    font-family: 'Karla', sans-serif; font-weight: 700; font-size: 16px;
     background: var(--paper); color: var(--ink);
     border: none; border-radius: 999px;
-    padding: 11px 20px; min-height: 44px;
+    padding: 12px 22px; min-height: 46px;
     cursor: pointer;
   }
 
   /* ---------- Descendance list (reused across "Descendance" page) ---------- */
   .desc-stats { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
-  .desc-stat { background: var(--paper-raised); border-radius: 14px; padding: 12px 16px; flex: 1; min-width: 130px; }
-  .desc-stat .n { font-family: 'Piazzolla', serif; font-weight: 700; font-size: 24px; }
+  .desc-stat { background: var(--paper-raised); border-radius: 14px; padding: 14px 18px; flex: 1; min-width: 130px; }
+  .desc-stat .n { font-family: 'Piazzolla', serif; font-weight: 700; font-size: 28px; }
   .desc-stat .n.accent { color: var(--accent); }
-  .desc-stat .l { font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+  .desc-stat .l { font-size: 13.5px; color: var(--ink-soft); margin-top: 3px; }
 
-  .desc-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; font-size: 12px; color: var(--ink-soft); }
+  .desc-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; font-size: 14.5px; color: var(--ink-soft); }
   .desc-legend span { display: inline-flex; align-items: center; gap: 6px; }
 
-  .desc-wrap { background: var(--paper-raised); border-radius: 14px; padding: 16px 16px 16px 12px; }
-  ul.desc-list { list-style: none; margin: 0; padding-left: 16px; }
+  .desc-wrap { background: var(--paper-raised); border-radius: 14px; padding: 18px 18px 18px 14px; }
+  ul.desc-list { list-style: none; margin: 0; padding-left: 18px; }
   ul.desc-root { padding-left: 0; }
-  ul.desc-list li { padding: 4px 0; border-left: 1px solid var(--line); padding-left: 12px; margin-left: 1px; }
+  ul.desc-list li { padding: 6px 0; border-left: 1px solid var(--line); padding-left: 14px; margin-left: 1px; }
   ul.desc-root > li { border-left: none; padding-left: 0; margin-left: 0; }
-  .desc-list summary { cursor: pointer; font-size: 13.5px; list-style: none; }
+  .desc-list summary { cursor: pointer; font-size: 16px; list-style: none; }
   .desc-list summary::-webkit-details-marker { display: none; }
-  .desc-list summary::before { content: '▸'; display: inline-block; width: 13px; color: var(--teal); }
+  .desc-list summary::before { content: '▸'; display: inline-block; width: 15px; color: var(--teal); }
   details[open] > summary::before { content: '▾'; }
   .desc-list .who { font-weight: 600; }
   .desc-list .who.died-child { font-weight: 400; color: var(--ink-soft); }
-  .desc-list .when { color: var(--ink-soft); font-size: 11.5px; margin-left: 4px; }
-  .desc-list .spouse { color: var(--teal); font-size: 11.5px; margin-left: 4px; }
-  .desc-list .count { color: var(--ink-soft); font-size: 11px; margin-left: 4px; }
-  .desc-list .child-tag { color: var(--accent); font-size: 10.5px; font-style: italic; margin-left: 6px; }
+  .desc-list .when { color: var(--ink-soft); font-size: 14px; margin-left: 4px; }
+  .desc-list .spouse { color: var(--teal); font-size: 14px; margin-left: 4px; }
+  .desc-list .count { color: var(--ink-soft); font-size: 13.5px; margin-left: 4px; }
+  .desc-list .child-tag { color: var(--accent); font-size: 13px; font-style: italic; margin-left: 6px; }
   .who.branch-corine { color: var(--corine); }
   .who.branch-marie { color: var(--marie); }
   .who.branch-chloe { color: var(--chloe); }
   .desc-step-title {
     font-family: 'Piazzolla', serif;
-    font-size: 21px;
+    font-size: 24px;
     font-weight: 600;
     color: var(--teal);
-    margin: 34px 0 12px;
-    padding-bottom: 8px;
+    margin: 36px 0 14px;
+    padding-bottom: 9px;
     border-bottom: 2px solid var(--teal-soft);
   }
   .desc-step-title:first-of-type { margin-top: 0; }
 
-  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft); text-align: center; }
+  footer { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 15px; color: var(--ink-soft); text-align: center; }
 
   /* ---------- Fiche / fratrie (pages b, c) ---------- */
-  .fiche-name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 16px; }
-  .fiche-role { font-size: 12px; color: var(--teal); font-weight: 600; margin-top: 2px; }
-  .fiche-facts { margin: 10px 0 0; padding: 0; list-style: none; font-size: 13.5px; display: flex; flex-direction: column; gap: 5px; }
+  .fiche-name { font-family: 'Piazzolla', serif; font-weight: 600; font-size: 19px; }
+  .fiche-role { font-size: 14.5px; color: var(--teal); font-weight: 600; margin-top: 3px; }
+  .fiche-facts { margin: 12px 0 0; padding: 0; list-style: none; font-size: 16px; display: flex; flex-direction: column; gap: 6px; }
   .fiche-facts li::before { content: '·'; color: var(--ink-soft); margin-right: 6px; }
-  .fiche-census { margin-top: 8px; font-size: 12.5px; color: var(--ink-soft); font-style: italic; }
+  .fiche-census { margin-top: 10px; font-size: 14.5px; color: var(--ink-soft); font-style: italic; }
 
   .sib-list { display: flex; flex-direction: column; gap: 0; }
   .sib-item {
-    display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
-    font-size: 13.5px; padding: 8px 0; border-bottom: 1px dashed var(--line);
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 10px;
+    font-size: 16px; padding: 10px 0; border-bottom: 1px dashed var(--line);
   }
   .sib-item:last-child { border-bottom: none; }
   .sib-item .sname { color: var(--ink); font-weight: 600; }
-  .sib-item .sinfo { color: var(--ink-soft); font-size: 12px; text-align: right; }
+  .sib-item .sinfo { color: var(--ink-soft); font-size: 14.5px; text-align: right; }
 </style>
 
 <div class="navbar">
